@@ -142,14 +142,7 @@ def fetch_nagpur_readings_waqi() -> list[dict]:
     }]
 
 
-def fetch_nagpur_readings_with_fallback() -> tuple[list[dict], str]:
-    """Try CPCB first, fall back to WAQI. Returns (readings, source_name)."""
-    try:
-        readings = fetch_nagpur_readings()
-        if readings:
-            return readings, "CPCB (data.gov.in)"
-    except AQIFetchError as exc:
-        logger.warning("CPCB fetch failed, trying fallback: %s", exc)
-
-    readings = fetch_nagpur_readings_waqi()
-    return readings, "WAQI (aqicn.org)"
+# Note: multi-source fallback orchestration now lives in src/data_sources.py,
+# which tries OpenAQ, CPCB, and WAQI in the order set by
+# config.DATA_SOURCE_PRIORITY. This module only implements the CPCB- and
+# WAQI-specific fetch logic.

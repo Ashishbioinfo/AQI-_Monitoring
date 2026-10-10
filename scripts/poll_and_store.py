@@ -17,7 +17,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from src.cpcb_client import fetch_nagpur_readings_with_fallback, AQIFetchError
+from src.data_sources import fetch_nagpur_readings_with_fallback, AQIFetchError
 from src.storage import insert_readings
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")

@@ -14,7 +14,7 @@ from streamlit_folium import st_folium
 import folium
 
 from src import config
-from src.cpcb_client import fetch_nagpur_readings_with_fallback, AQIFetchError
+from src.data_sources import fetch_nagpur_readings_with_fallback, AQIFetchError
 from src.storage import insert_readings, get_history, get_stations, get_latest_snapshot
 
 st.set_page_config(page_title="Nagpur AQI Monitor", page_icon="🌫️", layout="wide")
@@ -34,11 +34,13 @@ def _load_live_readings():
 
 def _render_api_key_help():
     st.warning(
-        "No CPCB API key configured yet, so live data can't be fetched.\n\n"
-        "1. Get a free key at https://www.data.gov.in (My Account → API Key)\n"
+        "No data source API key configured yet, so live data can't be fetched. "
+        "OpenAQ is the easiest to set up (free, no government ID needed):\n\n"
+        "1. Get a free key at https://explore.openaq.org/register\n"
         "2. Copy `.env.example` to `.env` in the project root\n"
-        "3. Set `CPCB_API_KEY=<your key>`\n"
-        "4. Restart the app"
+        "3. Set `OPENAQ_API_KEY=<your key>`\n"
+        "4. Restart the app\n\n"
+        "(CPCB `data.gov.in` and WAQI are also supported as fallback sources — see README.)"
     )
 
 
@@ -49,7 +51,7 @@ readings: list[dict] = []
 source = None
 fetch_error = None
 
-if not config.CPCB_API_KEY and not config.WAQI_API_TOKEN:
+if not config.OPENAQ_API_KEY and not config.CPCB_API_KEY and not config.WAQI_API_TOKEN:
     _render_api_key_help()
 else:
     try:

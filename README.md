@@ -17,14 +17,24 @@ A Streamlit dashboard that tracks real-time and historical Air Quality Index
 
 ## Data sources
 
-1. **Primary: CPCB real-time feed via data.gov.in**
-   Resource: "Real time Air Quality Index from various locations"
-   (`https://www.data.gov.in/resource/real-time-air-quality-index-various-locations`)
-   - Free, official Government of India source.
-   - Get an API key: sign up at https://www.data.gov.in → *My Account → API Key*.
-2. **Fallback: WAQI (aqicn.org)** — used automatically only if the CPCB feed
-   has no usable Nagpur data (e.g. temporary outage) and `WAQI_API_TOKEN` is
-   configured. Free token: https://aqicn.org/data-platform/token/
+The app tries multiple sources in order (`src/config.py` →
+`DATA_SOURCE_PRIORITY`, default `["openaq", "waqi", "cpcb"]`), automatically
+falling back if one fails or isn't configured. **You only need one key to get
+started — OpenAQ is the easiest.**
+
+1. **OpenAQ (recommended, default primary)**
+   - Free, open, non-profit aggregator — no commercial-use restriction.
+   - Signup is just an email (no government ID): https://explore.openaq.org/register
+   - Also re-publishes CPCB station data for India, so coverage for Nagpur is good.
+2. **WAQI (aqicn.org)** — fallback.
+   - Free for non-commercial use. Token: https://aqicn.org/data-platform/token/
+3. **CPCB real-time feed via data.gov.in** — fallback, official Govt of India source.
+   - Resource: "Real time Air Quality Index from various locations"
+     (`https://www.data.gov.in/resource/real-time-air-quality-index-various-locations`)
+   - Requires signing in via the **Janparichay** government SSO (My Account →
+     API Key) — more signup friction than the other two, so it's not the
+     default primary, but still supported if you'd rather use the official
+     source.
 
 ## Setup
 
@@ -34,7 +44,7 @@ python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
 copy .env.example .env
-# edit .env and set CPCB_API_KEY=<your key>
+# edit .env and set OPENAQ_API_KEY=<your key>
 streamlit run app.py
 ```
 
