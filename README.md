@@ -48,6 +48,27 @@ copy .env.example .env
 streamlit run app.py
 ```
 
+## Deploying to Streamlit Community Cloud
+
+1. Push this project to a GitHub repository.
+2. Sign in at [share.streamlit.io](https://share.streamlit.io/) and create an app
+   from that repository, selecting `app.py` as the main file.
+3. In the app's **Settings → Secrets**, add at least one API key in TOML format:
+
+   ```toml
+   OPENAQ_API_KEY = "your OpenAQ key"
+   # Optional fallback keys:
+   CPCB_API_KEY = "your data.gov.in key"
+   WAQI_API_TOKEN = "your WAQI token"
+   ```
+
+   Secrets are read from Streamlit's secrets store; the same values can still be
+   supplied as environment variables or in a local `.env` file when running locally.
+4. Deploy the app. The SQLite database is stored on the app's local filesystem,
+   which Community Cloud may reset when the app restarts or is redeployed. Historical
+   trends therefore aren't guaranteed to persist across restarts; use an external
+   database if durable history is required.
+
 ## Building up historical trends
 
 The dashboard stores a snapshot on every page load, but for continuous trend
